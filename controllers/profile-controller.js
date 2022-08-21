@@ -1,4 +1,4 @@
-const Profile = require('../models').Profile;
+const { Profile } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 require('dotenv').config()
@@ -40,13 +40,13 @@ const add = async (req, res) => {
                 avatar: url
             })
             
-            return res.status(201).send(result)
+            return res.status(200).json(result)
         }
-        return res.status(401).send({
+        return res.status(500).json({
             message: 'Profile gagal ditambahkan.'
         })
     } catch (err) {
-        return res.status(401).send(err)
+        return res.status(500).json(err)
     }
 }
 
