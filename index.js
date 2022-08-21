@@ -1,10 +1,11 @@
 const express = require('express')
 const app = express()
-const dotenv = require('dotenv')
-dotenv.config()
-const port = process.env.port || 3000
+require('dotenv').config()
+const port = process.env.PORT || 3000
 const router = require('./routes/index')
 const passport = require('./lib/passport')
+const socketio = require('socket.io')
+
 const logger = (req, res, next) => {
     console.log(`${req.method} ${req.url}`)
     next()
@@ -37,6 +38,19 @@ const notFoundHandler = (req, res, next) => {
 app.use(errorHandler)
 app.use(notFoundHandler)
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is Running!`)
+})
+
+const io = socketio(server)
+
+io.on('connection', (socket) => {
+    console.log('user connected')
+    socket.on('chat message', (msg) => {
+        io.emit('new chat', msg)
+    })
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected')
+    })
 })
