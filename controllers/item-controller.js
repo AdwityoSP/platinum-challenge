@@ -1,4 +1,4 @@
-const Item = require('../models').Item;
+const { Item } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 require('dotenv').config()
@@ -37,13 +37,13 @@ const add = async (req, res) => {
                 qty: req.body.qty,
                 image: url
             })
-            return res.status(201).send(result)
+            return res.status(200).json(result)
         }
-        return res.status(401).send({
+        return res.status(500).json({
             message: 'Item gagal ditambahkan.'
         })
     } catch (err) {
-        return res.status(400).send(err);
+        return res.status(500).json(err);
     }
 }
 
@@ -51,9 +51,9 @@ const list = async (req, res) => {
     try {
         let result = await Item.findAll()
 
-        return res.status(201).send(result)
+        return res.status(200).json(result)
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(500).json(err)
     }
 }
 
@@ -62,14 +62,14 @@ const getById = async (req, res) => {
         let item = await Item.findByPk(req.params.id)
 
         if (!item) {
-            return res.status(401).send({
+            return res.status(500).json({
                 message: 'Item tidak ditemukan.'
             })
         }
 
-        return res.status(201).send(item)
+        return res.status(200).json(item)
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(500).json(err)
     }
 }
 
@@ -79,7 +79,7 @@ const update = async (req, res) => {
     try {
         let item = await Item.findByPk(req.params.id)
         if (!item) {
-            return res.status(401).send({
+            return res.status(500).json({
                 message: 'Item tidak ditemukan.'
             })
         }
@@ -92,14 +92,14 @@ const update = async (req, res) => {
                 qty: req.body.qty,
                 image: url
             })
-            return res.status(201).send(result)
+            return res.status(200).json(result)
         }
 
-        return res.status(401).send({
+        return res.status(500).json({
             message: 'Item gagal diperbarui.'
         })
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(500).json(err)
     }
 }
 
@@ -107,17 +107,17 @@ const deleteById = async (req, res) => {
     try {
         let item = await Item.findByPk(req.params.id)
         if (!item) {
-            return res.status(401).send({
+            return res.status(500).send({
                 message: 'Item tidak ditemukan.'
             })
         }
 
         await item.destroy()
-        return res.status(201).send({
+        return res.status(200).send({
             message: 'Item berhasil dihapus.'
         })
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(500).send(err)
     }
 }
 
