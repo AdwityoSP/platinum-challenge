@@ -1,7 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const restrict = require('../middlewares/restrict')
-const multer = require('multer')
+const express = require('express');
+const router = express.Router();
+const restrict = require('../middlewares/restrict');
+const restrictAdmin = require('../middlewares/restrictAdmin');
+const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -31,35 +32,37 @@ const orderController = require('../controllers').order;
 const transactionController = require('../controllers').transaction;
 const profileController = require('../controllers').profile;
 
-/* User Router */
-router.post('/api/user/register', userController.register);
-router.post('/api/user/login', userController.login);
-router.get('/api/user/authorization', restrict, userController.profile);
-router.get('/api/user/showAll', userController.list);
-router.get('/api/user/getById/:id', userController.getById);
-router.put('/api/user/update/:id', userController.update);
-router.delete('/api/user/deleteById/:id', userController.deleteById);
+/* Admin Router */
+router.get('/api/user/authorization', restrict, userController.authorization);
+router.get('/api/user/showAll', restrictAdmin, userController.list);
+router.put('/api/user/update/:id', restrictAdmin, userController.update);
+router.delete('/api/user/deleteById/:id', restrict, userController.deleteById);
 
+/* User router */
+router.post('/api/user/register', userController.register);
+router.get('/api/user/verify/:token', userController.verification);
+router.post('/api/user/login', userController.login);
+router.get('/api/user/getById/:id', restrict, userController.getById);
 router.post('/api/user/profile/add', restrict, upload.single('avatar'), profileController.add);
 
 /* Item Router */
-router.post('/api/item/create', upload.single('image'), itemController.add);
-router.get('/api/item/showAll', itemController.list);
-router.get('/api/item/getById/:id', itemController.getById);
-router.put('/api/item/update/:id', upload.single('image'), itemController.update);
-router.delete('/api/item/deleteById/:id', itemController.deleteById);
+router.post('/api/item/create', restrictAdmin, upload.single('image'), itemController.add);
+router.get('/api/item/showAll', restrict, itemController.list);
+router.get('/api/item/getById/:id', restrict, itemController.getById);
+router.put('/api/item/update/:id', restrictAdmin, upload.single('image'), itemController.update);
+router.delete('/api/item/deleteById/:id', restrictAdmin, itemController.deleteById);
 
 /* Order Router */
-router.post('/api/order/create', orderController.add);
-router.get('/api/order/showAll', orderController.list);
-router.get('/api/order/getById/:id', orderController.getById);
-router.put('/api/order/update/:id', orderController.update);
-router.delete('/api/order/deleteById/:id', orderController.deleteById);
+router.post('/api/order/create', restrict, orderController.add);
+router.get('/api/order/showAll', restrictAdmin, orderController.list);
+router.get('/api/order/getById/:id', restrict, orderController.getById);
+router.put('/api/order/update/:id', restrictAdmin, orderController.update);
+router.delete('/api/order/deleteById/:id', restrict, orderController.deleteById);
 
 /* Transaction Router */
-router.post('/api/transaction/create', transactionController.add);
-router.get('/api/transaction/showAll', transactionController.list);
-router.get('/api/transaction/getById/:id', transactionController.getById);
-router.delete('/api/transaction/deleteById/:id', transactionController.deleteById);
+router.post('/api/transaction/create', restrict, transactionController.add);
+router.get('/api/transaction/showAll', restrictAdmin, transactionController.list);
+router.get('/api/transaction/getById/:id', restrict, transactionController.getById);
+router.delete('/api/transaction/deleteById/:id', restrictAdmin, transactionController.deleteById);
 
 module.exports = router;

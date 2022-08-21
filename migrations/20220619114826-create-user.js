@@ -29,6 +29,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      role: {
+        type: Sequelize.STRING
+      },
+      token: {
+        type: Sequelize.STRING
+      },
+      isVerified: {
+        type: Sequelize.BOOLEAN
+      },
+      isExpired: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
