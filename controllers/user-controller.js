@@ -3,87 +3,150 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const secretKey = process.env.secretkey_jwt
+const transporter = require('../helpers/transporter');
+const secretKey = process.env.SECRETKEY_JWT
+
 const register = async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    if (password.length < 8) {
-        return res.json({ error: 'Password must be at least 8 chars' })
-    }
-
-    const encryptedPassword = bcrypt.hashSync(password, 10)
-
     try {
-        let user = {};
-        user = await User.findOne({ where: { username: username } })
-        if (user) {
-            return res.json({ message: 'User is already registered!' })
+        const username = req.body.username;
+        const email = req.body.email;
+        const pass = req.body.password;
+
+        const checkUser = await User.findOne({ where: { username: username } });
+        if (checkUser) {
+            return res.status(500).json({ message: 'Email or username has been already taken' });
         }
-        let data = await User.create({
+        const checkEmail = await User.findOne({ where: { email: email } });
+        if (checkEmail) {
+            return res.status(500).json({ message: 'Email or username has been already taken' });
+        }
+        if (pass.length < 8) {
+            return res.status(500).json('Password At Least 8 Characters');
+        }
+
+        const encryptedPassword = bcrypt.hashSync(pass, 10);
+        const token = jwt.sign({}, secretKey, {
+            expiresIn: '1d'
+        })
+
+        const data = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            email: req.body.email,
-            username: req.body.username,
-            password: encryptedPassword
+            username: username,
+            email: email,
+            password: encryptedPassword,
+            role: req.body.role,
+            token: token,
+            isVerified: false,
+            isExpired: false,
+        }
+
+        await User.create(data)
+
+        const mail = {
+            from: process.env.SMTP_USER,
+            to: email,
+            subject: 'Verifikasi',
+            text: `Link verifikasi: http://localhost:3000/api/user/verify/${token}`,
+        }
+
+        transporter.sendMail(mail, (err, info) => {
+            if (err) {
+                console.log(err);
+            }
         })
-        return res.status(201).send({
-            message: 'Registrasi berhasil.',
-            id: data.id,
-            username: data.username
+        return res.status(200).json({ message: 'Link verifikasi sudah dikirim melalui email' });
+    } catch {
+        return res.json({ message: 'Internal Server Error' });
+    }
+}
+
+const verification = async (req, res) => {
+    try {
+        const token = req.params.token;
+        const userByToken = await User.findOne({
+            where: { token: token }
+        })
+
+        if (userByToken) {
+            const validateToken = userByToken.isExpired;
+            if (validateToken) {
+                return res.status(500).json({
+                    message: 'Token expired!'
+                })
+            }
+
+            await User.update(
+                {
+                    isVerified: true,
+                    isExpired: true
+                }, {
+                where: { token: token }
+            }
+            )
+            return res.status(200).json({
+                message: 'User berhasil di verifikasi!'
+            })
+        }
+        return res.status(500).json({
+            message: 'Token tidak valid'
         })
     } catch {
-        return res.status(404).send({
-            err: 'Server is Error'
+        return res.status(500).json({
+            message: 'Server is Error'
         })
     }
 }
 
 const login = async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
     try {
-        let user = {};
-        user = await User.findOne({
-            where: { username: username }
+        const email = req.body.email;
+        const password = req.body.password;
+    
+        const user = await User.findOne({
+            where: { email: email, isVerified: true },
         })
         if (!user) {
-            return res.json({ message: 'User Not Found!' })
+            return res.json({ message: 'Lakukan verifikasi dahulu!' })
         }
 
         const isPasswordValid = bcrypt.compareSync(password, user.password)
         if (!isPasswordValid) {
-            return res.json({ message: 'Username or Password Wrong!!' })
+            return res.json({ message: 'Email or Password Wrong!!' })
         }
 
-        const accesToken = jwt.sign({
+        const accessToken = jwt.sign({
             id: user.id,
-            username: user.username
-        }, secretKey)
+            email: user.email,
+            role: user.role
+        }, secretKey, {
+            expiresIn: '1d'
+        })
 
-        return res.status(201).send({
+        return res.status(200).json({
             id: user.id,
-            username: user.username,
-            accesToken: accesToken
+            email: user.email,
+            role: user.role,
+            accessToken: accessToken
         })
     } catch {
-        return res.status(404).send({
+        return res.status(500).json({
             message: 'Server is Error!'
         })
     }
 }
 
-const profile = async (req, res) => {
+const authorization = async (req, res) => {
     try {
         const currentUser = req.user;
 
-        return res.status(201).send({
+        return res.status(200).json({
             id: currentUser.id,
-            username: currentUser.username
+            username: currentUser.username,
+            role: currentUser.role
         })
     } catch {
-        return res.status(404).send({
+        return res.status(500).json({
             message: 'Server is Error'
         })
     }
@@ -102,15 +165,15 @@ const list = async (req, res) => {
 }
 
 const getById = async (req, res) => {
-    const userId = req.params.id
-    // if (isNaN(userId)) {
-    //     return res.status(400).json({
-    //         message: 'userId harus angka'
-    //     })
-    // }
-    
+    const userId = req.params.id;
+
     try {
         let user = await User.findByPk(userId);
+        // if (isNaN(userId)) {
+        //     return res.json({
+        //         message: 'userId harus angka'
+        //     })
+        // }
         if (!user) {
             return res.status(500).json({
                 message: 'User not found!'
@@ -118,8 +181,9 @@ const getById = async (req, res) => {
         }
         return res.status(200).json(user)
     } catch (err) {
-        return res.status(404).json({
-            message: 'Server is Error'
+        return res.status(500).json({
+            message: 'Server is Error',
+            err: err
         })
     }
 }
@@ -128,10 +192,10 @@ const update = async (req, res) => {
     try {
         const password = req.body.password;
         const encryptedPassword = bcrypt.hashSync(password, 10)
-        
+
         let user = await User.findByPk(req.params.id);
         if (!user) {
-            return res.status(401).send({
+            return res.status(500).json({
                 message: 'User tidak ditemukan.'
             })
         }
@@ -140,14 +204,16 @@ const update = async (req, res) => {
             lastName: req.body.lastName,
             username: req.body.username,
             email: req.body.email,
-            password: encryptedPassword
+            password: encryptedPassword,
+            role: req.body.role,
+            isVerified: req.body.isVerified
         })
-        return res.status(201).send({
+        return res.status(200).json({
             message: 'User berhasil diperbarui.',
             result: user
         })
     } catch {
-        return res.status(404).send({
+        return res.status(500).json({
             message: 'User gagal diperbarui.'
         })
     }
@@ -158,17 +224,17 @@ const deleteById = async (req, res) => {
         let user = {};
         user = await User.findByPk(req.params.id);
         if (!user) {
-            return res.status(404).send({
+            return res.status(500).json({
                 message: 'User tidak ditemukan.'
             })
         }
 
         await user.destroy()
-        return res.status(201).send({
+        return res.status(200).json({
             message: 'User berhasil dihapus.'
         })
     } catch {
-        return res.status(404).send({
+        return res.status(500).json({
             message: 'User gagal dihapus.'
         })
     }
@@ -176,10 +242,11 @@ const deleteById = async (req, res) => {
 
 module.exports = {
     register,
+    verification,
     login,
-    profile,
+    authorization,
     list,
     getById,
     update,
-    deleteById
+    deleteById,
 }
