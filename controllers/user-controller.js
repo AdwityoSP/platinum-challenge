@@ -7,19 +7,20 @@ const transporter = require('../helpers/transporter');
 const secretKey = process.env.SECRETKEY_JWT
 
 const register = async (req, res) => {
-    try {
-        const username = req.body.username;
-        const email = req.body.email;
-        const pass = req.body.password;
+    const username = req.body.username;
+    const email = req.body.email;
+    const pass = req.body.password;
 
-        const checkUser = await User.findOne({ where: { username: username } });
-        if (checkUser) {
-            return res.status(500).json({ message: 'Email or username has been already taken' });
-        }
-        const checkEmail = await User.findOne({ where: { email: email } });
-        if (checkEmail) {
-            return res.status(500).json({ message: 'Email or username has been already taken' });
-        }
+    const checkUser = await User.findOne({ where: { username: username } });
+    if (checkUser) {
+        return res.status(500).json({ message: 'Email or username has been already taken' });
+    }
+    const checkEmail = await User.findOne({ where: { email: email } });
+    if (checkEmail) {
+        return res.status(500).json({ message: 'Email or username has been already taken' });
+    }
+
+    try {
         if (pass.length < 8) {
             return res.status(500).json('Password At Least 8 Characters');
         }
@@ -102,7 +103,7 @@ const login = async (req, res) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
-    
+
         const user = await User.findOne({
             where: { email: email, isVerified: true },
         })
@@ -166,14 +167,14 @@ const list = async (req, res) => {
 
 const getById = async (req, res) => {
     const userId = req.params.id;
+    // if (isNaN(userId)) {
+    //     return res.json({
+    //         message: 'userId harus angka'
+    //     })
+    // }
 
     try {
         let user = await User.findByPk(userId);
-        // if (isNaN(userId)) {
-        //     return res.json({
-        //         message: 'userId harus angka'
-        //     })
-        // }
         if (!user) {
             return res.status(500).json({
                 message: 'User not found!'
@@ -182,31 +183,30 @@ const getById = async (req, res) => {
         return res.status(200).json(user)
     } catch (err) {
         return res.status(500).json({
-            message: 'Server is Error',
-            err: err
+            message: 'Server is Error'
         })
     }
 }
 
 const update = async (req, res) => {
-    try {
-        const password = req.body.password;
-        const encryptedPassword = bcrypt.hashSync(password, 10)
+    const password = req.body.password;
+    const encryptedPassword = bcrypt.hashSync(password, 10)
+    const userId = req.params.id;
 
-        let user = await User.findByPk(req.params.id);
+    try {
+        let user = await User.findByPk(userId);
         if (!user) {
             return res.status(500).json({
                 message: 'User tidak ditemukan.'
             })
         }
-        await user.update({
+        await User.update({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             username: req.body.username,
             email: req.body.email,
             password: encryptedPassword,
-            role: req.body.role,
-            isVerified: req.body.isVerified
+            role: req.body.role
         })
         return res.status(200).json({
             message: 'User berhasil diperbarui.',
@@ -229,7 +229,7 @@ const deleteById = async (req, res) => {
             })
         }
 
-        await user.destroy()
+        await User.destroy()
         return res.status(200).json({
             message: 'User berhasil dihapus.'
         })
