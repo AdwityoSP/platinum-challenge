@@ -200,7 +200,7 @@ const update = async (req, res) => {
                 message: 'User tidak ditemukan.'
             })
         }
-        await User.update({
+        await user.update({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             username: req.body.username,
