@@ -84,7 +84,7 @@ const getById = async (req, res) => {
     }
 }
 
-const update = async (req, res) => {
+const deleteById = async (req, res) => {
     try {
         let transaction = await Transaction.findByPk(req.params.id)
         if (!transaction) {
@@ -93,37 +93,12 @@ const update = async (req, res) => {
             })
         }
 
-        await transaction.update({
-            userId: req.body.userId,
-            orderId: req.body.orderId,
-            itemId: req.body.itemId
-        })
-        return res.status(200).json({
-            message: 'Transaksi berhasil diperbarui.',
-            result: transaction
-        })
-    } catch {
-        return res.status(500).json({
-            message: 'Server is error.'
-        })
-    }
-}
-
-const deleteById = async (req, res) => {
-    try {
-        let transaction = await Transaction.findByPk(req.params.id)
-        if (!transaction) {
-            return res.status(500).send({
-                message: 'Transaksi tidak ditemukan.'
-            })
-        }
-
         await transaction.destroy()
-        return res.status(200).send({
+        return res.status(200).json({
             message: 'Transaksi berhasil dihapus.'
         })
     } catch {
-        return res.status(500).send({
+        return res.status(500).json({
             message: 'Server is error.'
         })
     }
@@ -133,6 +108,5 @@ module.exports = {
     add,
     list,
     getById,
-    update,
     deleteById
 }

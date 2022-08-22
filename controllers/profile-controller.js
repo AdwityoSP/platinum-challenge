@@ -50,6 +50,19 @@ const add = async (req, res) => {
     }
 }
 
+const list = async (req, res) => {
+    try {
+        let result = await Profile.findAll()
+
+        return res.status(200).json(result)
+    } catch {
+        return res.status(500).json({
+            message: 'Server is error.'
+        })
+    }
+}
+
 module.exports = {
-    add
+    add,
+    list
 }
