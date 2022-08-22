@@ -4,6 +4,7 @@ Langkah penggunaan :
 1. inisialisasi ENV
 
 daftar ENV : 
+
 	<!-- PORT_SERVER -->
   	PORT=3000
 	
@@ -29,7 +30,7 @@ daftar ENV :
 2. instalasi :
 
     - npm install express bcrypt cloudinary dotenv ejs jest jsonwebtoken multer passport passport-jwt pg sequelize supertest socket.io nodemailer nodemailer-express-handlebars nodemon 
-    
+
     - nodemon->(optional)
 
 3. buat database :
