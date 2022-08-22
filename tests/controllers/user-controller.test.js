@@ -1,12 +1,15 @@
-const userController = require('../../controllers').user
+const userController = require('../../controllers/user-controller');
 const { User } = require('../../models')
 
 jest.mock('../../models', () => {
     return {
         User: {
             findAll: jest.fn(),
+            findOne: jest.fn(),
             create: jest.fn(),
             findByPk: jest.fn(),
+            update: jest.fn(),
+            destroy: jest.fn(),
         },
     }
 });
@@ -26,6 +29,74 @@ const mockResponse = () => {
 
     return res;
 }
+
+describe('register', () => {
+    test('Jika regist email sama, return res.json msg: `Email or username has been already taken`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        User.findOne.mockResolvedValueOnce({})
+        await userController.register(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(500)
+        expect(res.json).toHaveBeenCalledWith({ message: 'Email or username has been already taken' })
+    })
+
+    test('Jika regist username sama, return res.json msg: `Email or username has been already taken`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        User.findOne.mockResolvedValueOnce({})
+        await userController.register(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(500)
+        expect(res.json).toHaveBeenCalledWith({ message: 'Email or username has been already taken' })
+    })
+
+    // test('Jika pass < 8, return res.json msg: `Password At Least 8 Characters`', async () => {
+    //     const req = mockRequest()
+    //     const res = mockResponse()
+
+    //     await userController.register(req, res)
+
+    //     expect(res.json).toHaveBeenCalledWith({ message: 'Password At Least 8 Characters' })
+    // })
+
+    test('Jika memenuhi syarat, return res.json msg: `Link verifikasi sudah dikirim melalui email`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        const data = {
+            firstName: 'admin',
+            lastName: '1',
+            username: 'admin',
+            email: 'admin@gmail.com',
+            password: 'password',
+            role: 'admin',
+            token: 'token',
+            isVerified: false,
+            isExpired: false,
+        }
+
+        User.create.mockResolvedValueOnce(data)
+        await userController.register(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith({ message: 'Link verifikasi sudah dikirim melalui email' })
+    })
+
+    test('Jika terdapat kesalahan, return error', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        User.create.mockImplementationOnce(() => {
+            throw new Error();
+        })
+        await userController.register(req, res)
+
+        expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error' })
+    })
+})
 
 describe('list', () => {
     test('User berhasil di fetch', async () => {
@@ -65,11 +136,19 @@ describe('getById', () => {
     // test('Jika user bukan angka, return message: `userId harus angka`', async () => {
     //     const req = mockRequest()
     //     const res = mockResponse()
+    //     req.params.id = 'A'
 
-    //     User.findByPk.mockResolvedValueOnce()
+    //     let user = [{
+    //         firstName: 'Admin',
+    //         lastName: '1',
+    //         username: 'admin1',
+    //         email: 'admin1@email.com',
+    //         password: '12345678'
+    //     }]
+
+    //     User.findByPk.mockResolvedValueOnce(user)
     //     await userController.getById(req, res)
 
-    //     expect(res.status).toHaveBeenCalledWith(500)
     //     expect(res.json).toHaveBeenCalledWith({ message: 'userId harus angka' })
     // })
 
@@ -77,7 +156,7 @@ describe('getById', () => {
         const req = mockRequest()
         const res = mockResponse()
 
-        User.findByPk.mockResolvedValueOnce(null)
+        User.findByPk.mockResolvedValueOnce(undefined)
         await userController.getById(req, res)
 
         expect(res.status).toHaveBeenCalledWith(500)
@@ -109,7 +188,7 @@ describe('getById', () => {
         const res = mockResponse()
 
         User.findByPk.mockImplementationOnce(() => {
-            throw new Error();
+            throw new Error('Error');
         })
         await userController.getById(req, res)
 
@@ -123,10 +202,10 @@ describe('update', () => {
         const req = mockRequest()
         const res = mockResponse()
 
-        User.findByPk.mockResolvedValueOnce()
+        User.findByPk.mockResolvedValueOnce(undefined)
         await userController.update(req, res)
 
-        expect(res.status).toHaveBeenCalledWith(500)
+        expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith({ message: 'User tidak ditemukan' })
     })
 
@@ -140,7 +219,9 @@ describe('update', () => {
             lastName: '1',
             username: 'admin1',
             email: 'admin1@email.com',
-            password: '12345678'
+            password: '12345678',
+            role: 'admin',
+            isVerified: false
         }]
 
         User.findByPk.mockResolvedValueOnce(user)
@@ -161,5 +242,51 @@ describe('update', () => {
 
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.json).toHaveBeenCalledWith({ message: 'User gagal diperbarui.' })
+    })
+})
+
+describe('deleteById', () => {
+    test('Jika user tidak ditemukan, return message: `User tidak ditemukan.`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        User.findByPk.mockResolvedValueOnce({})
+        await userController.deleteById(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(500)
+        expect(res.json).toHaveBeenCalledWith({ message: 'User tidak ditemukan.' })
+    })
+
+    test('Jika user ditemukan, return message: `User berhasil dihapus.`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+        req.params.id = 1
+
+        let user = [{
+            firstName: 'Admin',
+            lastName: '1',
+            username: 'admin1',
+            email: 'admin1@email.com',
+            password: '12345678'
+        }]
+        
+        User.destroy.mockResolvedValueOnce(user)
+        await userController.deleteById(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith({ message: 'User berhasil dihapus.' })
+    })
+
+    test('Jika terdapat kesalahan, return message: `User gagal dihapus.`', async () => {
+        const req = mockRequest()
+        const res = mockResponse()
+
+        User.findByPk.mockImplementationOnce(() => {
+            throw new Error();
+        })
+        await userController.deleteById(req, res)
+
+        expect(res.status).toHaveBeenCalledWith(500)
+        expect(res.json).toHaveBeenCalledWith({ message: 'User gagal dihapus.' })
     })
 })
