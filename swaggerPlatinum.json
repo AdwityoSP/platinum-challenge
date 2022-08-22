@@ -1,0 +1,1470 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Ini bingleshop, API Platinum!",
+    "version": "1.0.0",
+    "title": "Bingle Shop",
+    "termsOfService": "-",
+    "contact": {
+      "email": "team1@mail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "User",
+      "description": "-",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "https://github.com/lintangmz/platinum-challenge/blob/main/routes/index.js"
+      }
+    },
+    {
+      "name": "Item",
+      "description": "-",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "https://github.com/lintangmz/platinum-challenge/blob/main/routes/index.js"
+      }
+    },
+    {
+      "name": "Order",
+      "description": "-",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "https://github.com/lintangmz/platinum-challenge/blob/main/routes/index.js"
+      }
+    },
+    {
+      "name": "Transaction",
+      "description": "-",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "https://github.com/lintangmz/platinum-challenge/blob/main/routes/index.js"
+      }
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/api/user/authorization": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "authorisasi user (untuk role admin)",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/showAll": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "menampilkan seluruh user (untuk role admin)",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/verify/token": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "melakukan verifikasi token",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "menampilkan foto profile",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "items": {
+                "$ref": "#/definitions/Profile"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "login user",
+        "description": "Create New",
+        "operationId": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": null
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": null
+                },
+                "userName": {
+                  "type": "string",
+                  "example": null
+                },
+                "email": {
+                  "type": "string",
+                  "example": null
+                },
+                "password": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": null
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": null
+                },
+                "userName": {
+                  "type": "string",
+                  "example": null
+                },
+                "email": {
+                  "type": "string",
+                  "example": null
+                },
+                "password": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "registrasi user",
+        "description": "Create New",
+        "operationId": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": null
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": null
+                },
+                "userName": {
+                  "type": "string",
+                  "example": null
+                },
+                "email": {
+                  "type": "string",
+                  "example": null
+                },
+                "password": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": null
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": null
+                },
+                "userName": {
+                  "type": "string",
+                  "example": null
+                },
+                "email": {
+                  "type": "string",
+                  "example": null
+                },
+                "password": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/getById/id": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "menampilkan user berdasarkan id",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/update/id": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "mengubah data user berdasarkan id (untuk role admin)",
+        "description": "",
+        "operationId": "updateUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/user/deleteById/id": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "menghapus data user berdasarkan id (untuk role admin)",
+        "description": "",
+        "operationId": "deleteUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": null
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": null
+                },
+                "userName": {
+                  "type": "string",
+                  "example": null
+                },
+                "email": {
+                  "type": "string",
+                  "example": null
+                },
+                "password": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/user/profile/add": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "menambahkan foto profile user",
+        "description": "Create New",
+        "operationId": "addImage",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Profile"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "userId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "avatar": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "userId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "avatar": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/item/showAll": {
+      "get": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Menampilkan data item",
+        "description": "",
+        "operationId": "findAllItem",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Item"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/item/create": {
+      "post": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Menambahkan item",
+        "description": "Create New",
+        "operationId": "addItem",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Item Object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Item"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "name": {
+                  "type": "string",
+                  "example": null
+                },
+                "description": {
+                  "type": "string",
+                  "example": null
+                },
+                "price": {
+                  "type": "string",
+                  "example": null
+                },
+                "qty": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "image": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "name": {
+                  "type": "string",
+                  "example": null
+                },
+                "description": {
+                  "type": "string",
+                  "example": null
+                },
+                "price": {
+                  "type": "string",
+                  "example": null
+                },
+                "qty": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "image": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/item/getById/id": {
+      "get": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Menampilkan item berdasarkan id",
+        "description": "",
+        "operationId": "getItem",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Item"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/item/update/id": {
+      "put": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Mengubah data item berdasarkan id",
+        "description": "",
+        "operationId": "updateItem",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/item/deleteById/id": {
+      "delete": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Menghapus data item berdasarkan id",
+        "description": "",
+        "operationId": "deleteItem",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Item"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "name": {
+                  "type": "string",
+                  "example": null
+                },
+                "description": {
+                  "type": "string",
+                  "example": null
+                },
+                "price": {
+                  "type": "string",
+                  "example": null
+                },
+                "qty": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "image": {
+                  "type": "string",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/order/showAll": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Menampilkan detil order",
+        "description": "",
+        "operationId": "findAllOrder",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getById/id": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Menampilkan order berdasarkan id",
+        "description": "",
+        "operationId": "getOrder",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/update/id": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Mengubah data order berdasarkan id",
+        "description": "",
+        "operationId": "updateOrder",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/order/deleteById/id": {
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Menghapus data order berdasarkan id",
+        "description": "",
+        "operationId": "deleteOrder",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Order"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "dateOrder": {
+                  "type": "string",
+                  "example": "2022-07-21T00:00:00.000Z"
+                },
+                "userId": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "status": {
+                  "type": "string",
+                  "example": "terkirim"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    },
+    "/api/order/create": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Menambahkan order",
+        "description": "Create New",
+        "operationId": "addOrder",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Order Object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Order"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "dateOrder": {
+                  "type": "string",
+                  "example": "2022-07-21T00:00:00.000Z"
+                },
+                "userId": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "status": {
+                  "type": "string",
+                  "example": "terkirim"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "dateOrder": {
+                  "type": "string",
+                  "example": "2022-07-21T00:00:00.000Z"
+                },
+                "userId": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                },
+                "status": {
+                  "type": "string",
+                  "example": "terkirim"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transaction/showAll": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Menampilkan detil transaksi",
+        "description": "",
+        "operationId": "findAllTransaction",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tansaction/create": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Menambahkan transaksi",
+        "description": "Create New",
+        "operationId": "addTransaction",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Order Object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "userId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "orderId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "itemId": {
+                  "type": "integer",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "userId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "orderId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "itemId": {
+                  "type": "integer",
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transaction/getById/id": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Menampilkan data transaksi berdasarkan id",
+        "description": "",
+        "operationId": "getTransaction",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              }
+            }
+          },
+          "400": {
+            "description": "failed operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error_message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transaction/deleteById/id": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Menghapus data transaksi berdasarkan id",
+        "description": "",
+        "operationId": "deleteTransaction",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              },
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": null
+                },
+                "userId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "orderId": {
+                  "type": "integer",
+                  "example": null
+                },
+                "itemId": {
+                  "type": "integer",
+                  "example": null
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "failed operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "firstName": {
+          "type": "string",
+          "example": "binar"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "academy"
+        },
+        "userName": {
+          "type": "string",
+          "example": "binaracademy"
+        },
+        "email": {
+          "type": "string",
+          "example": "binaracademy@binar.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "binar123"
+        }
+      }
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Air Max"
+        },
+        "description": {
+          "type": "string",
+          "example": "Air Max"
+        },
+        "price": {
+          "type": "string",
+          "example": 1000000
+        },
+        "qty": {
+          "type": "integer",
+          "format": "int64",
+          "example": 10
+        },
+        "image": {
+          "type": "string",
+          "example": null
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "dateOrder": {
+          "type": "string",
+          "example": "2022-07-21T00:00:00.000Z"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "status": {
+          "type": "string",
+          "example": "terkirim"
+        }
+      }
+    },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "userId": {
+          "type": "integer",
+          "example": 1
+        },
+        "avatar": {
+          "type": "integer",
+          "example": null
+        }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": null
+        },
+        "userId": {
+          "type": "integer",
+          "example": null
+        },
+        "orderId": {
+          "type": "integer",
+          "example": null
+        },
+        "itemId": {
+          "type": "integer",
+          "example": null
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
