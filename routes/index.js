@@ -44,6 +44,7 @@ router.get('/api/user/verify/:token', userController.verification);
 router.post('/api/user/login', userController.login);
 router.get('/api/user/getById/:id', restrict, userController.getById);
 router.post('/api/user/profile/add', restrict, upload.single('avatar'), profileController.add);
+router.get('/api/user/profile/show', restrict, profileController.list);
 
 /* Item Router */
 router.post('/api/item/create', restrictAdmin, upload.single('image'), itemController.add);
