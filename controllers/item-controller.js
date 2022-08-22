@@ -52,8 +52,8 @@ const list = async (req, res) => {
         let result = await Item.findAll()
 
         return res.status(200).json(result)
-    } catch (err) {
-        return res.status(500).json(err)
+    } catch {
+        return res.status(500).json({ message: 'Server is Error' })
     }
 }
 
@@ -68,8 +68,10 @@ const getById = async (req, res) => {
         }
 
         return res.status(200).json(item)
-    } catch (err) {
-        return res.status(500).json(err)
+    } catch {
+        return res.status(500).json({
+            message: 'Server is Error'
+        })
     }
 }
 
@@ -98,8 +100,10 @@ const update = async (req, res) => {
         return res.status(500).json({
             message: 'Item gagal diperbarui.'
         })
-    } catch (err) {
-        return res.status(500).json(err)
+    } catch {
+        return res.status(500).json({
+            message: 'Server is Error'
+        })
     }
 }
 
@@ -107,17 +111,19 @@ const deleteById = async (req, res) => {
     try {
         let item = await Item.findByPk(req.params.id)
         if (!item) {
-            return res.status(500).send({
+            return res.status(500).json({
                 message: 'Item tidak ditemukan.'
             })
         }
 
         await item.destroy()
-        return res.status(200).send({
+        return res.status(200).json({
             message: 'Item berhasil dihapus.'
         })
-    } catch (err) {
-        return res.status(500).send(err)
+    } catch {
+        return res.status(500).json({
+            message: 'Server is Error'
+        })
     }
 }
 
@@ -126,5 +132,5 @@ module.exports = {
     list,
     getById,
     update,
-    deleteById
+    deleteById,
 }
